@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "123456789012",
+    "project_id": "justdial-ocr-example",
+    "storage_bucket": "justdial-ocr-example.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890",
+        "android_client_info": {
+          "package_name": "com.justdialocrsdk.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123456789012-abcdef1234567890.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.justdialocrsdk.example",
+            "certificate_hash": "your_sha1_certificate_hash"
+          }
+        },
+        {
+          "client_id": "123456789012-abcdef1234567890.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdoFOVvnJOOnGyr3uslRrIitjNi1CwtNI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123456789012-abcdef1234567890.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

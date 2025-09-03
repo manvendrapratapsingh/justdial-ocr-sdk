@@ -84,6 +84,14 @@
     "turbo": "^1.10.7",
     "typescript": "^5.8.3"
   },
+  "dependencies": {
+    "@react-native-firebase/app": "^20.1.0",
+    "@react-native-firebase/vertexai-preview": "^20.1.0",
+    "@react-native-firebase/ml": "^20.1.0",
+    "react-native-vision-camera": "^4.0.0",
+    "react-native-image-picker": "^7.1.0",
+    "react-native-document-scanner-plugin": "^0.4.7"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
