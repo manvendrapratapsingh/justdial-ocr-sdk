@@ -14,8 +14,8 @@ class MainActivity : ReactActivity() {
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
+   * with New Architecture explicitly disabled to prevent native library crashes
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
-      DefaultReactActivityDelegate(this, mainComponentName, BuildConfig.IS_NEW_ARCHITECTURE_ENABLED)
+      DefaultReactActivityDelegate(this, mainComponentName, false)
 }

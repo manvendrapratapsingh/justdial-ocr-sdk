@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -31,14 +31,16 @@ export default function FirebaseTestApp() {
       
       if (apps.length > 0) {
         const app = apps[0];
-        setFirebaseInfo({
-          name: app.name,
-          projectId: app.options.projectId,
-          appId: app.options.appId,
-          initialized: true
-        });
-        setIsInitialized(true);
-        Alert.alert('Success', `Firebase initialized successfully!\n\nProject: ${app.options.projectId}\nRegion: asia-south1 (configured)`);
+        if (app && app.options) {
+          setFirebaseInfo({
+            name: app.name,
+            projectId: app.options.projectId,
+            appId: app.options.appId,
+            initialized: true
+          });
+          setIsInitialized(true);
+          Alert.alert('Success', `Firebase initialized successfully!\n\nProject: ${app.options.projectId}\nRegion: asia-south1 (configured)`);
+        }
       } else {
         Alert.alert('Error', 'Firebase not initialized - check google-services.json');
       }
@@ -56,7 +58,7 @@ export default function FirebaseTestApp() {
       setTestResult(null);
       
       // Get Vertex AI instance
-      const vertexAI = getVertexAI(firebaseApp(), { 
+      const vertexAI = getVertexAI(firebaseApp.app(), { 
         location: 'asia-south1' // India region compliance
       });
       
@@ -133,7 +135,7 @@ export default function FirebaseTestApp() {
         <Text style={styles.infoText}>✅ Vertex AI dependencies installed</Text>
         <Text style={styles.infoText}>✅ Asia-south1 region compliance</Text>
         <Text style={styles.infoText}>⏳ OCR SDK integration pending</Text>
-        <Text style={styles.sectionDescription} style={{ marginTop: 12 }}>
+        <Text style={[styles.sectionDescription, { marginTop: 12 }]}>
           Once this test passes, the OCR SDK will work with the same Firebase configuration.
         </Text>
       </View>

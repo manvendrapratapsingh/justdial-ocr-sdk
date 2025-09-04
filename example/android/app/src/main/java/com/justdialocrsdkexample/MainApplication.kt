@@ -10,19 +10,20 @@ import com.justdialocrsdk.JustdialOcrSdkPackage
 
 class MainApplication : Application(), ReactApplication {
 
-  override val reactNativeHost: ReactNativeHost =
-      object : ReactNativeHost(this) {
-        override fun getPackages(): List<ReactPackage> {
-          return listOf(
-            MainReactPackage(),
-            JustdialOcrSdkPackage()
-          )
-        }
+  private val mReactNativeHost = object : ReactNativeHost(this) {
+    override fun getPackages(): List<ReactPackage> {
+      val packages = arrayListOf<ReactPackage>()
+      packages.add(MainReactPackage())
+      packages.add(JustdialOcrSdkPackage())
+      return packages
+    }
 
-        override fun getJSMainModuleName(): String = "index"
+    override fun getJSMainModuleName(): String = "index"
 
-        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
-      }
+    override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+  }
+
+  override fun getReactNativeHost(): ReactNativeHost = mReactNativeHost
 
   override fun onCreate() {
     super.onCreate()

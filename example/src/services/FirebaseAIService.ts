@@ -3,7 +3,7 @@
  * Uses the new @react-native-firebase/ai package instead of deprecated vertex AI
  */
 
-import ai from '@react-native-firebase/ai';
+import { getAI, getGenerativeModel } from '@react-native-firebase/ai';
 
 export interface OCRResult {
   success: boolean;
@@ -30,9 +30,9 @@ export class FirebaseAIService {
   public async initialize(): Promise<void> {
     try {
       // Initialize the generative model using the new Firebase AI SDK
-      this.generativeModel = ai().generativeModel({
-        model: 'gemini-1.5-flash',
-        // Add any additional configuration here
+      const ai = getAI();
+      this.generativeModel = getGenerativeModel(ai, {
+        model: 'gemini-1.5-flash'
       });
       
       console.log('Firebase AI service initialized successfully');

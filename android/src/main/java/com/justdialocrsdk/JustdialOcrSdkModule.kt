@@ -45,6 +45,7 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
   private var documentScannerPromise: Promise? = null
   private var mlKitTextPromise: Promise? = null
   private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+  private var currentDocumentType: String = "document"
   
   companion object {
     const val NAME = "JustdialOcrSdk"
@@ -362,14 +363,14 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   override fun captureCheque(enableGalleryImport: Boolean, scannerMode: String, promise: Promise) {
     try {
-      Log.d(TAG, "Starting complete cheque OCR flow")
-      // For now, just return a demo result showing the complete architecture is set up
-      val result: WritableMap = WritableNativeMap()
-      result.putBoolean("success", true)
-      result.putString("documentType", "cheque")
-      result.putString("message", "Complete OCR architecture implemented: Camera/Gallery → ML Kit → Firebase AI → OCR Results")
-      result.putString("architecture", "React Native App → JustdialOCR SDK → [Camera/Gallery → ML Kit → Firebase AI] → OCR Results")
-      promise.resolve(result)
+      Log.d(TAG, "Starting complete cheque OCR flow - opening document scanner...")
+      
+      // Store the document type for later processing
+      currentDocumentType = "cheque"
+      
+      // Call the actual document scanner
+      openDocumentScanner(enableGalleryImport, scannerMode, promise)
+      
     } catch (e: Exception) {
       promise.reject("CAPTURE_CHEQUE_ERROR", "Failed to capture cheque: ${e.message}")
     }
@@ -378,13 +379,14 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   override fun captureENach(enableGalleryImport: Boolean, scannerMode: String, promise: Promise) {
     try {
-      Log.d(TAG, "Starting complete e-NACH OCR flow")
-      val result: WritableMap = WritableNativeMap()
-      result.putBoolean("success", true)
-      result.putString("documentType", "enach")
-      result.putString("message", "Complete OCR architecture implemented: Camera/Gallery → ML Kit → Firebase AI → OCR Results")
-      result.putString("architecture", "React Native App → JustdialOCR SDK → [Camera/Gallery → ML Kit → Firebase AI] → OCR Results")
-      promise.resolve(result)
+      Log.d(TAG, "Starting complete e-NACH OCR flow - opening document scanner...")
+      
+      // Store the document type for later processing
+      currentDocumentType = "enach"
+      
+      // Call the actual document scanner
+      openDocumentScanner(enableGalleryImport, scannerMode, promise)
+      
     } catch (e: Exception) {
       promise.reject("CAPTURE_ENACH_ERROR", "Failed to capture e-NACH: ${e.message}")
     }
@@ -393,13 +395,14 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   override fun captureDocument(enableGalleryImport: Boolean, scannerMode: String, promise: Promise) {
     try {
-      Log.d(TAG, "Starting complete document OCR flow with auto-detection")
-      val result: WritableMap = WritableNativeMap()
-      result.putBoolean("success", true)
-      result.putString("documentType", "auto")
-      result.putString("message", "Complete OCR architecture implemented: Camera/Gallery → ML Kit → Firebase AI → OCR Results")
-      result.putString("architecture", "React Native App → JustdialOCR SDK → [Camera/Gallery → ML Kit → Firebase AI] → OCR Results")
-      promise.resolve(result)
+      Log.d(TAG, "Starting complete document OCR flow - opening document scanner...")
+      
+      // Store the document type for later processing
+      currentDocumentType = "auto"
+      
+      // Call the actual document scanner
+      openDocumentScanner(enableGalleryImport, scannerMode, promise)
+      
     } catch (e: Exception) {
       promise.reject("CAPTURE_DOCUMENT_ERROR", "Failed to capture document: ${e.message}")
     }

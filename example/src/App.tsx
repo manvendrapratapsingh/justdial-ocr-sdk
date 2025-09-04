@@ -9,7 +9,7 @@ import React from 'react';
 import OCRTestApp from './OCRTestApp';
 
 // Use our comprehensive OCR test component as the main app
-const App = (): JSX.Element => {
+const App = (): React.JSX.Element => {
   return <OCRTestApp />;
 };
 
