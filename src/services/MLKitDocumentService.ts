@@ -1,7 +1,8 @@
 import { CameraService } from './CameraService';
 import { DocumentProcessorService } from './DocumentProcessorService';
-import { FirebaseAIService } from './FirebaseAIService';
-import { FirebaseApp } from '@react-native-firebase/app';
+import firebaseApp from '@react-native-firebase/app';
+
+type FirebaseApp = typeof firebaseApp;
 import type { 
   CameraOptions, 
   DocumentCaptureResult,
@@ -14,12 +15,10 @@ import type {
 export class MLKitDocumentService {
   private static readonly TAG = 'MLKitDocumentService';
   private documentProcessor: DocumentProcessorService;
-  private firebaseService: FirebaseAIService;
   private isInitialized = false;
 
   constructor() {
     this.documentProcessor = new DocumentProcessorService();
-    this.firebaseService = new FirebaseAIService();
   }
 
   async initialize(app: FirebaseApp): Promise<void> {

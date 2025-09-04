@@ -1,6 +1,8 @@
 import { FirebaseAIService } from './FirebaseAIService';
-import { ChequeOCRData, ENachOCRData, ChequeOCRResult, ENachOCRResult, OCRProcessingOptions } from '../types';
-import { FirebaseApp } from '@react-native-firebase/app';
+import type { ChequeOCRData, ENachOCRData, ChequeOCRResult, ENachOCRResult, OCRProcessingOptions } from '../types';
+import firebaseApp from '@react-native-firebase/app';
+
+type FirebaseApp = typeof firebaseApp;
 
 export class DocumentProcessorService {
   private static readonly TAG = 'DocumentProcessorService';
@@ -31,7 +33,7 @@ export class DocumentProcessorService {
 
   async processCheque(
     imageUri: string, 
-    customPrompt?: string,
+    _customPrompt?: string,
     options?: OCRProcessingOptions
   ): Promise<ChequeOCRResult> {
     try {
@@ -76,7 +78,7 @@ export class DocumentProcessorService {
 
   async processENach(
     imageUri: string,
-    customPrompt?: string, 
+    _customPrompt?: string, 
     options?: OCRProcessingOptions
   ): Promise<ENachOCRResult> {
     try {

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F8F9FA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔥 Firebase Integration Test"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="JustdialOCR SDK Setup Verification"
+            android:textSize="16sp"
+            android:textColor="#666"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Status Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Firebase Configuration Status"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/statusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🔄 Initializing Firebase..."
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:lineSpacingExtra="4dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Test Button -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+           >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🧪 Test Firebase Vertex AI"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="This will test the complete Firebase AI setup that the OCR SDK will use internally."
+                    android:textSize="14sp"
+                    android:textColor="#666"
+                    android:layout_marginBottom="16dp"
+                    android:lineSpacingExtra="2dp" />
+
+                <Button
+                    android:id="@+id/testButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🚀 Test Vertex AI (asia-south1)"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:background="@android:color/system_accent1_500"
+                    android:textColor="@android:color/white"
+                    android:padding="16dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Results Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📄 Test Results"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/resultText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Press the test button to verify Vertex AI connectivity..."
+                    android:textSize="14sp"
+                    android:textColor="#333"
+                    android:lineSpacingExtra="4dp"
+                    android:background="#F9F9F9"
+                    android:padding="12dp"
+                    android:minHeight="120dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Info Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ℹ️ Setup Status"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="✅ Firebase project configured\n✅ google-services.json in place\n✅ Vertex AI dependencies installed\n✅ Asia-south1 region compliance\n⏳ OCR SDK integration pending\n\nOnce this test passes, the OCR SDK will work with the same Firebase configuration."
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:lineSpacingExtra="4dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

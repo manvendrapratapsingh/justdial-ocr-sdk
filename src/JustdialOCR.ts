@@ -3,12 +3,9 @@ import { DocumentProcessorService } from './services/DocumentProcessorService';
 import { MLKitDocumentService } from './services/MLKitDocumentService';
 import { CameraService } from './services/CameraService';
 import type { 
-  ChequeOCRData, 
-  ENachOCRData, 
   ChequeOCRResult, 
   ENachOCRResult, 
   OCRProcessingOptions,
-  OCRConfiguration,
   CameraOptions,
   DocumentCaptureResult,
   MLKitTextRecognitionResult
@@ -39,16 +36,19 @@ export default class JustdialOCR {
   }
 
   /**
-   * Initialize the SDK with Firebase configuration
+   * Initialize the SDK with Firebase AI Logic
+   * NO AUTHENTICATION REQUIRED - uses project credentials from config files
    * Must be called before using any OCR methods
    */
   async initialize(): Promise<void> {
     try {
       console.log(`${JustdialOCR.TAG}: Initializing JustdialOCR SDK v${this.version}`);
+      console.log(`${JustdialOCR.TAG}: Using Firebase AI Logic (No user authentication required)`);
       console.log(`${JustdialOCR.TAG}: Initializing for India region compliance (asia-south1)`);
 
-      // Use default Firebase app or get the existing one
-      const app = firebaseApp();
+      // Initialize Firebase automatically from config files
+      // google-services.json (Android) / GoogleService-Info.plist (iOS)  
+      const app = firebaseApp;
       
       await this.documentProcessor.initialize(app);
       await this.mlKitDocumentService.initialize(app);
@@ -268,17 +268,18 @@ export default class JustdialOCR {
       regionalCompliance: this.validateRegionalCompliance(),
       supportedDocuments: ['Indian Bank Cheques', 'e-NACH Mandate Forms'],
       features: [
+        'Complete OCR Pipeline in Single SDK Call',
+        'NO User Authentication Required',
+        'Firebase AI Logic (Vertex AI backend)',
+        'ML Kit Camera & Gallery Integration',
         'OCR Text Extraction',
         'Fraud Detection',
         'Field Validation', 
         'Image Optimization',
         'Cross-platform Support (iOS + Android)',
         'Asia-South1 Regional Compliance',
-        'Firebase AI Integration',
-        'ML Kit Document Scanner',
-        'ML Kit Text Recognition',
-        'Camera and Gallery Support',
-        'Auto Document Type Detection'
+        'Auto Document Type Detection',
+        'Self-Contained Architecture'
       ],
       mlKit: {
         available: mlKitInfo.mlKitAvailable,
@@ -303,15 +304,4 @@ export default class JustdialOCR {
     }
   }
 
-  private getDefaultConfig(): OCRConfiguration {
-    return {
-      region: 'asia-south1',
-      temperature: 0.1,
-      maxOutputTokens: 4096,
-      responseMimeType: 'application/json',
-      maxImageDimension: 1024,
-      enableFraudDetection: true,
-      enableCrossValidation: true,
-    };
-  }
 }

@@ -154,7 +154,10 @@ export class CameraService {
         throw new Error('Invalid scan result');
       }
 
-      const firstPage = scanResult.pages[0];
+      const firstPage = scanResult.pages?.[0];
+      if (!firstPage) {
+        throw new Error('No pages captured in scan result');
+      }
       const mlKitResult = await CameraService.recognizeTextFromImage(firstPage.imageUri);
 
       return {
@@ -188,8 +191,12 @@ export class CameraService {
       }
 
       // Step 2: Process with ML Kit
+      const firstPage = scanResult.pages[0];
+      if (!firstPage) {
+        throw new Error('No pages found in scan result');
+      }
       const mlKitResult = await CameraService.recognizeTextFromImage(
-        scanResult.pages[0].imageUri
+        firstPage.imageUri
       );
 
       // Step 3: Auto-detect document type (optional)

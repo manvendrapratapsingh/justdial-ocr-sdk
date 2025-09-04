@@ -1,21 +1,22 @@
 const path = require('path');
-const pkg = require('../package.json');
 
 module.exports = {
-  project: {
-    ios: {
-      automaticPodsInstallation: true,
-    },
-  },
   dependencies: {
-    [pkg.name]: {
-      root: path.join(__dirname, '..'),
+    '@react-native-firebase/app': {
       platforms: {
-        // Codegen script incorrectly fails without this
-        // So we explicitly specify the platforms with empty object
-        ios: {},
-        android: {},
-      },
+        android: {
+          sourceDir: '../node_modules/@react-native-firebase/app/android',
+          packageImportPath: 'io.invertase.firebase.RNFirebasePackage'
+        }
+      }
     },
+    '@react-native-firebase/ai': {
+      platforms: {
+        android: {
+          sourceDir: '../node_modules/@react-native-firebase/ai/android', 
+          packageImportPath: 'io.invertase.firebase.ai.ReactNativeFirebaseAIPackage'
+        }
+      }
+    }
   },
 };

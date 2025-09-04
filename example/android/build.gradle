@@ -1,21 +1,50 @@
 buildscript {
     ext {
-        buildToolsVersion = "36.0.0"
+        buildToolsVersion = "35.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 36
-        targetSdkVersion = 36
+        compileSdkVersion = 35
+        targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
+        gradleVersion = "8.6.0"
     }
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("com.android.tools.build:gradle:$gradleVersion")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("com.google.gms:google-services:4.4.2")
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://www.jitpack.io" }
+
+        // React Native specific repositories
+        maven {
+            url("https://oss.sonatype.org/content/repositories/snapshots/")
+        }
+        maven { 
+            url "https://repo1.maven.org/maven2"
+        }
+        
+        // Firebase and other dependencies
+        maven {
+            url("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        }
+        
+        // Try local React Native if available
+        try {
+            maven { url "$rootDir/../node_modules/react-native/android" }
+        } catch (Exception ignored) {}
+        try {
+            maven { url "$rootDir/../node_modules/jsc-android/dist" }
+        } catch (Exception ignored) {}
+    }
+}

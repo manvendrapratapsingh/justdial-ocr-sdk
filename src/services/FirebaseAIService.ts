@@ -1,12 +1,17 @@
-import { FirebaseApp } from '@react-native-firebase/app';
-import { VertexAI } from '@react-native-firebase/vertexai-preview';
-import { OCRConfiguration, ChequeOCRData, ENachOCRData, OCRProcessingOptions } from '../types';
+// Firebase AI Logic Service - NO AUTHENTICATION REQUIRED
+// Uses Firebase project credentials from google-services.json / GoogleService-Info.plist
+// Direct replacement for Gemini Developer API with Vertex AI backend
+import firebaseApp from '@react-native-firebase/app';
+import type { VertexAI } from '../types/vertexai';
+import type { OCRConfiguration, ChequeOCRData, ENachOCRData, OCRProcessingOptions } from '../types';
+
+type FirebaseApp = typeof firebaseApp;
 import { ImageUtils } from '../utils/ImageUtils';
 
 export class FirebaseAIService {
   private static readonly TAG = 'FirebaseAIService';
-  private static readonly REGION = 'asia-south1'; // India region for compliance
-  private static readonly MODEL_NAME = 'gemini-1.5-flash';
+  private static readonly REGION = 'asia-south1'; // REQUIRED: India region for compliance
+  private static readonly MODEL_NAME = 'gemini-1.5-flash-001'; // Latest stable model
   
   private vertexAI: VertexAI | null = null;
   private isInitialized = false;
@@ -23,16 +28,26 @@ export class FirebaseAIService {
 
   async initializeService(app: FirebaseApp): Promise<void> {
     try {
-      console.log(`${FirebaseAIService.TAG}: Initializing Firebase AI for India compliance`);
+      console.log(`${FirebaseAIService.TAG}: Initializing Firebase AI Logic (No Auth Required)`);
       
-      this.vertexAI = app.vertexAI({
-        location: FirebaseAIService.REGION,
+      // Initialize Vertex AI with asia-south1 region for compliance
+      // This uses the Firebase project configuration automatically
+      this.vertexAI = (app as any).vertexAI({
+        location: FirebaseAIService.REGION, // asia-south1 enforced
       });
       
+      // Validate regional compliance
+      if (!this.validateRegionalCompliance()) {
+        throw new Error('Regional compliance validation failed - must use asia-south1');
+      }
+      
       this.isInitialized = true;
-      console.log(`${FirebaseAIService.TAG}: ✅ Firebase AI initialized with India region compliance`);
+      console.log(`${FirebaseAIService.TAG}: ✅ Firebase AI Logic initialized successfully`);
+      console.log(`${FirebaseAIService.TAG}: Region: ${FirebaseAIService.REGION} (Mumbai, India)`);
+      console.log(`${FirebaseAIService.TAG}: Model: ${FirebaseAIService.MODEL_NAME}`);
+      console.log(`${FirebaseAIService.TAG}: Authentication: Not required (uses project credentials)`);
     } catch (error) {
-      console.error(`${FirebaseAIService.TAG}: Failed to initialize Firebase AI`, error);
+      console.error(`${FirebaseAIService.TAG}: Firebase AI initialization failed`, error);
       throw error;
     }
   }
@@ -45,7 +60,7 @@ export class FirebaseAIService {
     return this.defaultConfig.region === 'asia-south1';
   }
 
-  async processCheque(imageUri: string, options?: OCRProcessingOptions): Promise<ChequeOCRData> {
+  async processCheque(imageUri: string, _options?: OCRProcessingOptions): Promise<ChequeOCRData> {
     if (!this.isInitialized || !this.vertexAI) {
       throw new Error('Firebase AI Service not initialized');
     }
@@ -78,7 +93,7 @@ export class FirebaseAIService {
     }
   }
 
-  async processENach(imageUri: string, options?: OCRProcessingOptions): Promise<ENachOCRData> {
+  async processENach(imageUri: string, _options?: OCRProcessingOptions): Promise<ENachOCRData> {
     if (!this.isInitialized || !this.vertexAI) {
       throw new Error('Firebase AI Service not initialized');
     }

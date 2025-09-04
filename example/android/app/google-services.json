@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1061320330355",
+    "project_id": "justdial-ocr-sdk",
+    "storage_bucket": "justdial-ocr-sdk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061320330355:android:6b1f6c945e9e96475cae06",
+        "android_client_info": {
+          "package_name": "com.justdialocrsdkexample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMSfTEPSn4Zr2uoTYFP7cEOyBn6VCx390"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

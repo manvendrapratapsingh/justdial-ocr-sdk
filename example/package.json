@@ -10,10 +10,11 @@
     "build:ios": "react-native build-ios --mode Debug"
   },
   "dependencies": {
-    "@react-native/new-app-screen": "0.81.0",
-    "react": "19.1.0",
-    "react-native": "0.81.0",
-    "react-native-safe-area-context": "^5.5.2"
+    "@react-native-firebase/ai": "^23.3.0",
+    "@react-native-firebase/app": "^23.3.0",
+    "react": "18.2.0",
+    "react-native": "0.72.17",
+    "react-native-safe-area-context": "^4.10.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

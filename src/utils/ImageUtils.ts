@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+// import { Platform } from 'react-native';
 
 export class ImageUtils {
   private static readonly TAG = 'ImageUtils';
