@@ -1,8 +1,8 @@
-// Firebase AI Logic Service - NO AUTHENTICATION REQUIRED
-// Uses Firebase project credentials from google-services.json / GoogleService-Info.plist
-// Implemented via @react-native-firebase/vertexai (Firebase Vertex AI)
-import { getVertexAI, getGenerativeModel } from '@react-native-firebase/vertexai';
-import { getApp } from '@react-native-firebase/app';
+// Firebase AI Logic Service - Uses Standard Firebase SDK with API Key
+// Configured with proper Firebase AI API key for seamless integration
+// Implemented via standard firebase SDK with Vertex AI
+import { getGenerativeModel } from 'firebase/vertexai';
+import { vertexAI } from '../config/firebaseConfig';
 import type { OCRConfiguration, ChequeOCRData, ENachOCRData, OCRProcessingOptions } from '../types';
 import { ImageUtils } from '../utils/ImageUtils';
 
@@ -24,18 +24,12 @@ export class FirebaseAIService {
     enableCrossValidation: true,
   };
 
-  async initializeService(app?: any): Promise<void> {
+  async initializeService(_app?: any): Promise<void> {
     try {
-      console.log(`${FirebaseAIService.TAG}: Initializing Firebase AI Logic (No Auth Required)`);
+      console.log(`${FirebaseAIService.TAG}: Initializing Firebase AI Logic with API Key`);
       
-      // Initialize Firebase Vertex AI with region compliance
-      // Use the app if provided, otherwise use default Firebase app
-      const firebaseAppInstance = app || getApp();
-      
-      const vertexAI = getVertexAI(firebaseAppInstance, {
-        location: FirebaseAIService.REGION, // Force asia-south1 region
-      });
-      
+      // Initialize Firebase Vertex AI using pre-configured instance
+      // The vertexAI instance is already configured with API key and region
       this.generativeModel = getGenerativeModel(vertexAI, {
         model: FirebaseAIService.MODEL_NAME,
         generationConfig: {
@@ -53,7 +47,7 @@ export class FirebaseAIService {
       console.log(`${FirebaseAIService.TAG}: ✅ Firebase AI Logic initialized successfully`);
       console.log(`${FirebaseAIService.TAG}: Region: ${FirebaseAIService.REGION} (Mumbai, India)`);
       console.log(`${FirebaseAIService.TAG}: Model: ${FirebaseAIService.MODEL_NAME}`);
-      console.log(`${FirebaseAIService.TAG}: Authentication: Not required (uses project credentials)`);
+      console.log(`${FirebaseAIService.TAG}: API Key: Configured (${FirebaseAIService.TAG})`);
     } catch (error) {
       console.error(`${FirebaseAIService.TAG}: Firebase AI initialization failed`, error);
       throw error;
@@ -140,11 +134,9 @@ export class FirebaseAIService {
     }
 
     try {
-      // Use Firebase Vertex AI generateContent with proper format
+      // Use standard Firebase Vertex AI generateContent with proper format
       const response = await this.generativeModel.generateContent([
-        {
-          text: prompt,
-        },
+        prompt,
         {
           inlineData: {
             mimeType: 'image/jpeg',
@@ -153,8 +145,8 @@ export class FirebaseAIService {
         },
       ]);
 
-      // Extract text from response
-      const result = response.response;
+      // Extract text from response using standard Firebase format
+      const result = await response.response;
       return result.text();
     } catch (error) {
       console.error(`${FirebaseAIService.TAG}: Error generating content`, error);
