@@ -79,6 +79,77 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  override fun optimizeImageToBytes(imageUri: String, maxDimension: Double, promise: Promise) {
+    try {
+      val uri = Uri.parse(imageUri)
+      val inputStream = reactApplicationContext.contentResolver.openInputStream(uri)
+      val originalBitmap = BitmapFactory.decodeStream(inputStream)
+      inputStream?.close()
+
+      if (originalBitmap == null) {
+        promise.reject("IMAGE_DECODE_ERROR", "Failed to decode image")
+        return
+      }
+
+      // Calculate optimal dimensions maintaining aspect ratio
+      val maxDim = maxDimension.toInt()
+      val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height.toFloat()
+      
+      val newWidth: Int
+      val newHeight: Int
+      
+      if (originalBitmap.width > originalBitmap.height) {
+        newWidth = min(originalBitmap.width, maxDim)
+        newHeight = (newWidth / aspectRatio).toInt()
+      } else {
+        newHeight = min(originalBitmap.height, maxDim)
+        newWidth = (newHeight * aspectRatio).toInt()
+      }
+
+      // Resize bitmap
+      val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
+      
+      // Convert to JPEG byte array (like bitmapToByteArray)
+      val byteArrayOutputStream = ByteArrayOutputStream()
+      
+      // Use high quality JPEG for better OCR results
+      resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+      var jpegBytes = byteArrayOutputStream.toByteArray()
+      
+      // If image is too large, reduce quality
+      if (jpegBytes.size > 4 * 1024 * 1024) { // 4MB limit
+        byteArrayOutputStream.reset()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
+        jpegBytes = byteArrayOutputStream.toByteArray()
+      }
+      
+      // Final check - if still too large, reduce further
+      if (jpegBytes.size > 4 * 1024 * 1024) {
+        byteArrayOutputStream.reset()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream)
+        jpegBytes = byteArrayOutputStream.toByteArray()
+      }
+      
+      Log.d(TAG, "Image optimized to bytes: ${originalBitmap.width}x${originalBitmap.height} -> ${newWidth}x${newHeight}, JPEG bytes: ${jpegBytes.size}")
+
+      // Cleanup
+      originalBitmap.recycle()
+      resizedBitmap.recycle()
+      byteArrayOutputStream.close()
+
+      // Return JPEG bytes as WritableArray (React Native doesn't support byte arrays directly)
+      val bytesArray = com.facebook.react.bridge.Arguments.createArray()
+      for (b in jpegBytes) {
+        bytesArray.pushInt(b.toInt() and 0xFF) // Convert signed byte to unsigned int
+      }
+
+      promise.resolve(bytesArray)
+    } catch (e: Exception) {
+      promise.reject("IMAGE_OPTIMIZATION_ERROR", "Failed to optimize image to bytes: ${e.message}")
+    }
+  }
+
+  @ReactMethod
   override fun optimizeImage(imageUri: String, maxDimension: Double, promise: Promise) {
     try {
       val uri = Uri.parse(imageUri)
@@ -109,11 +180,30 @@ class JustdialOcrSdkModule(reactContext: ReactApplicationContext) :
       // Resize bitmap
       val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true)
       
-      // Convert to base64
+      // Convert to base64 with optimized settings for Vertex AI
       val byteArrayOutputStream = ByteArrayOutputStream()
-      resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, byteArrayOutputStream)
-      val byteArray = byteArrayOutputStream.toByteArray()
+      
+      // Use higher quality JPEG for better OCR results, but ensure size limit
+      resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+      var byteArray = byteArrayOutputStream.toByteArray()
+      
+      // If image is too large, reduce quality
+      if (byteArray.size > 4 * 1024 * 1024) { // 4MB limit
+        byteArrayOutputStream.reset()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 75, byteArrayOutputStream)
+        byteArray = byteArrayOutputStream.toByteArray()
+      }
+      
+      // Final check - if still too large, reduce further
+      if (byteArray.size > 4 * 1024 * 1024) {
+        byteArrayOutputStream.reset()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream)
+        byteArray = byteArrayOutputStream.toByteArray()
+      }
+      
       val base64String = Base64.encodeToString(byteArray, Base64.NO_WRAP)
+      
+      Log.d(TAG, "Image optimized: ${originalBitmap.width}x${originalBitmap.height} -> ${newWidth}x${newHeight}, size: ${byteArray.size} bytes")
 
       // Cleanup
       originalBitmap.recycle()

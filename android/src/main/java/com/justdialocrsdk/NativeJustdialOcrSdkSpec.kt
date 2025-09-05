@@ -16,6 +16,7 @@ abstract class NativeJustdialOcrSdkSpec(reactContext: ReactApplicationContext) :
 
   // Image processing methods
   abstract fun optimizeImage(imageUri: String, maxDimension: Double, promise: Promise)
+  abstract fun optimizeImageToBytes(imageUri: String, maxDimension: Double, promise: Promise)
   abstract fun validateImage(imageUri: String, maxFileSizeBytes: Double, promise: Promise)  
   abstract fun getImageDimensions(imageUri: String, promise: Promise)
 

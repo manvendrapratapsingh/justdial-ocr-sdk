@@ -52,9 +52,12 @@ export class CameraService {
       }
 
       if (Platform.OS === 'ios') {
-        const result = await JustdialOcrSdk.openImagePicker();
-        console.log(`${CameraService.TAG}: Image picker completed successfully`);
-        return result;
+        // Note: openImagePicker not implemented in TurboModule yet, use document scanner instead
+        console.log(`${CameraService.TAG}: Using document scanner for iOS image selection`);
+        return await CameraService.openDocumentScanner({ 
+          enableGalleryImport: true, 
+          scannerMode: 'full' 
+        });
       } else {
         // On Android, use document scanner with gallery enabled
         return await CameraService.openDocumentScanner({ 

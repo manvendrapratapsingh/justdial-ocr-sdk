@@ -1,25 +1,45 @@
 // Firebase Configuration for JustdialOCR SDK
-// Uses standard Firebase SDK for AI functionality with proper API keys
+// Uses Firebase AI Logic with Vertex AI backend for India region compliance
+// Matches Android implementation: Firebase.ai(backend = GenerativeBackend.vertexAI())
 
 import { initializeApp } from 'firebase/app';
-import { getVertexAI } from 'firebase/vertexai';
 
 // Firebase configuration with API key
 const firebaseConfig = {
-  apiKey: "AIzaSyDtf0WDyfgiM-zo7SLJhG4IBYAI4h3UW_8",
-  authDomain: "justdial-ocr-sdk.firebaseapp.com",
-  projectId: "justdial-ocr-sdk",
-  storageBucket: "justdial-ocr-sdk.firebasestorage.app",
-  messagingSenderId: "1061320330355",
-  appId: "1:1061320330355:web:e9c56191cb8f1cdd5cae06"
+  apiKey: "AIzaSyCWjLoB6lyRGWwWG5DWfc0kfwp-CpoS3JQ",
+  authDomain: "ambient-stack-467317-n7.firebaseapp.com",
+  projectId: "ambient-stack-467317-n7",
+  storageBucket: "ambient-stack-467317-n7.firebasestorage.app",
+  messagingSenderId: "134377649404",
+  appId: "1:134377649404:web:19aa9279f093418ca15379",
+  measurementId: "G-HX7Z94CYXV"
 };
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-// Initialize Vertex AI with asia-south1 region for compliance
-const vertexAI = getVertexAI(firebaseApp, {
-  location: 'asia-south1' // Mumbai, India region for data compliance
-});
+// Initialize Firebase AI Logic with Vertex AI backend (matching Android implementation)
+let aiService: any = null;
+const REGION = 'asia-south1'; // India region for data residency compliance
 
-export { firebaseApp, vertexAI, firebaseConfig };
+console.log('Firebase Config: Initializing Firebase AI Logic for India compliance');
+console.log(`Firebase Config: Target region: ${REGION} for India data residency compliance`);
+
+try {
+  // Use correct VertexAI backend initialization (matching the guidance)
+  const { getAI, VertexAIBackend } = require('firebase/vertexai');
+  
+  aiService = getAI(firebaseApp, { 
+    backend: new VertexAIBackend({ location: REGION }) 
+  });
+  
+  console.log('Firebase Config: ✅ TRUE Firebase AI Logic initialized with India region compliance');
+  console.log(`Firebase Config: Using Vertex AI backend with region: ${REGION}`);
+  
+} catch (error) {
+  console.error('Firebase Config: Failed to initialize Firebase AI Logic with Vertex AI backend:', error);
+  throw error;
+}
+
+export { firebaseApp, firebaseConfig, REGION };
+export { aiService as vertexAI };
