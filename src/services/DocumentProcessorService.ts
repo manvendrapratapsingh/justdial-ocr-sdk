@@ -1,8 +1,6 @@
 import { FirebaseAIService } from './FirebaseAIService';
 import type { ChequeOCRData, ENachOCRData, ChequeOCRResult, ENachOCRResult, OCRProcessingOptions } from '../types';
-import firebaseApp from '@react-native-firebase/app';
-
-type FirebaseApp = typeof firebaseApp;
+// Using any type temporarily for Firebase app
 
 export class DocumentProcessorService {
   private static readonly TAG = 'DocumentProcessorService';
@@ -12,7 +10,7 @@ export class DocumentProcessorService {
     this.firebaseService = new FirebaseAIService();
   }
 
-  async initialize(app: FirebaseApp): Promise<void> {
+  async initialize(app: any): Promise<void> {
     try {
       console.log(`${DocumentProcessorService.TAG}: Initializing document processor`);
       await this.firebaseService.initializeService(app);

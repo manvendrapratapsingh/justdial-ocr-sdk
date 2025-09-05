@@ -69,6 +69,11 @@ kotlin {
     jvmToolchain(17)
 }
 
+// Exclude legacy 'react-native' artifact to avoid duplication with 'react-android'
+configurations.configureEach {
+    exclude group: 'com.facebook.react', module: 'react-native'
+}
+
 dependencies {
     // React Native dependencies - pinned to exact JS version
     implementation 'com.facebook.react:react-android:0.72.17'
@@ -94,8 +99,12 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
     
-    // Firebase dependencies 
-    implementation platform('com.google.firebase:firebase-bom:33.7.0')
-    implementation 'com.google.firebase:firebase-vertexai'  // Use stable Firebase AI Logic
+    // Firebase dependencies
+    // Align with RNFB default BOM (23.3.0 uses BOM ~34.x)
+    implementation platform('com.google.firebase:firebase-bom:34.2.0')
     implementation 'com.google.firebase:firebase-analytics'
+
+    // Manually linked RN native modules (workaround for missing CLI gradle script)
+    implementation project(":@react-native-firebase_app")
+    implementation project(":react-native-safe-area-context")
 }

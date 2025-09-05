@@ -4,3 +4,12 @@ include ':app'
 // Include JustdialOCR SDK module
 include ':justdial-ocr-sdk'
 project(':justdial-ocr-sdk').projectDir = new File(rootProject.projectDir, '../../android')
+
+// Manually link React Native native modules (workaround for missing CLI gradle script)
+// @react-native-firebase/app (RNFBAppModule)
+include ':@react-native-firebase_app'
+project(':@react-native-firebase_app').projectDir = new File(rootProject.projectDir, '../../node_modules/@react-native-firebase/app/android')
+
+// react-native-safe-area-context
+include ':react-native-safe-area-context'
+project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-safe-area-context/android')

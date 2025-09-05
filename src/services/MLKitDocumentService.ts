@@ -1,8 +1,6 @@
 import { CameraService } from './CameraService';
 import { DocumentProcessorService } from './DocumentProcessorService';
-import firebaseApp from '@react-native-firebase/app';
-
-type FirebaseApp = typeof firebaseApp;
+// Using any type temporarily for Firebase app
 import type { 
   CameraOptions, 
   DocumentCaptureResult,
@@ -21,7 +19,7 @@ export class MLKitDocumentService {
     this.documentProcessor = new DocumentProcessorService();
   }
 
-  async initialize(app: FirebaseApp): Promise<void> {
+  async initialize(app: any): Promise<void> {
     try {
       console.log(`${MLKitDocumentService.TAG}: Initializing ML Kit Document Service`);
       

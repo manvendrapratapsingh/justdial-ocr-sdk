@@ -1,4 +1,4 @@
-import firebaseApp from '@react-native-firebase/app';
+import { getApp } from '@react-native-firebase/app';
 import { DocumentProcessorService } from './services/DocumentProcessorService';
 import { MLKitDocumentService } from './services/MLKitDocumentService';
 import { CameraService } from './services/CameraService';
@@ -48,7 +48,7 @@ export default class JustdialOCR {
 
       // Initialize Firebase automatically from config files
       // google-services.json (Android) / GoogleService-Info.plist (iOS)  
-      const app = firebaseApp;
+      const app = getApp();
       
       await this.documentProcessor.initialize(app);
       await this.mlKitDocumentService.initialize(app);

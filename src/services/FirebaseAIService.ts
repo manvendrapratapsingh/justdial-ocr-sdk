@@ -1,19 +1,17 @@
 // Firebase AI Logic Service - NO AUTHENTICATION REQUIRED
 // Uses Firebase project credentials from google-services.json / GoogleService-Info.plist
-// Direct replacement for Gemini Developer API with Vertex AI backend
-import firebaseApp from '@react-native-firebase/app';
-import type { VertexAI } from '../types/vertexai';
+// Implemented via @react-native-firebase/vertexai (Firebase Vertex AI)
+import { getVertexAI, getGenerativeModel } from '@react-native-firebase/vertexai';
+import { getApp } from '@react-native-firebase/app';
 import type { OCRConfiguration, ChequeOCRData, ENachOCRData, OCRProcessingOptions } from '../types';
-
-type FirebaseApp = typeof firebaseApp;
 import { ImageUtils } from '../utils/ImageUtils';
 
 export class FirebaseAIService {
   private static readonly TAG = 'FirebaseAIService';
   private static readonly REGION = 'asia-south1'; // REQUIRED: India region for compliance
-  private static readonly MODEL_NAME = 'gemini-1.5-flash-001'; // Latest stable model
+  private static readonly MODEL_NAME = 'gemini-1.5-flash';
   
-  private vertexAI: VertexAI | null = null;
+  private generativeModel: any | null = null;
   private isInitialized = false;
   
   private readonly defaultConfig: OCRConfiguration = {
@@ -26,14 +24,24 @@ export class FirebaseAIService {
     enableCrossValidation: true,
   };
 
-  async initializeService(app: FirebaseApp): Promise<void> {
+  async initializeService(app?: any): Promise<void> {
     try {
       console.log(`${FirebaseAIService.TAG}: Initializing Firebase AI Logic (No Auth Required)`);
       
-      // Initialize Vertex AI with asia-south1 region for compliance
-      // This uses the Firebase project configuration automatically
-      this.vertexAI = (app as any).vertexAI({
-        location: FirebaseAIService.REGION, // asia-south1 enforced
+      // Initialize Firebase Vertex AI with region compliance
+      // Use the app if provided, otherwise use default Firebase app
+      const firebaseAppInstance = app || getApp();
+      
+      const vertexAI = getVertexAI(firebaseAppInstance, {
+        location: FirebaseAIService.REGION, // Force asia-south1 region
+      });
+      
+      this.generativeModel = getGenerativeModel(vertexAI, {
+        model: FirebaseAIService.MODEL_NAME,
+        generationConfig: {
+          temperature: this.defaultConfig.temperature,
+          maxOutputTokens: this.defaultConfig.maxOutputTokens,
+        }
       });
       
       // Validate regional compliance
@@ -61,7 +69,7 @@ export class FirebaseAIService {
   }
 
   async processCheque(imageUri: string, _options?: OCRProcessingOptions): Promise<ChequeOCRData> {
-    if (!this.isInitialized || !this.vertexAI) {
+    if (!this.isInitialized || !this.generativeModel) {
       throw new Error('Firebase AI Service not initialized');
     }
 
@@ -94,7 +102,7 @@ export class FirebaseAIService {
   }
 
   async processENach(imageUri: string, _options?: OCRProcessingOptions): Promise<ENachOCRData> {
-    if (!this.isInitialized || !this.vertexAI) {
+    if (!this.isInitialized || !this.generativeModel) {
       throw new Error('Firebase AI Service not initialized');
     }
 
@@ -127,32 +135,31 @@ export class FirebaseAIService {
   }
 
   private async generateContent(prompt: string, imageBase64: string): Promise<string> {
-    if (!this.vertexAI) {
-      throw new Error('VertexAI not initialized');
+    if (!this.generativeModel) {
+      throw new Error('AI model not initialized');
     }
 
-    const model = this.vertexAI.getGenerativeModel({
-      model: FirebaseAIService.MODEL_NAME,
-      generationConfig: {
-        temperature: this.defaultConfig.temperature,
-        maxOutputTokens: this.defaultConfig.maxOutputTokens,
-        responseMimeType: this.defaultConfig.responseMimeType,
-      },
-    });
-
-    const response = await model.generateContent([
-      {
-        text: prompt,
-      },
-      {
-        inlineData: {
-          mimeType: 'image/jpeg',
-          data: imageBase64,
+    try {
+      // Use Firebase Vertex AI generateContent with proper format
+      const response = await this.generativeModel.generateContent([
+        {
+          text: prompt,
         },
-      },
-    ]);
+        {
+          inlineData: {
+            mimeType: 'image/jpeg',
+            data: imageBase64,
+          },
+        },
+      ]);
 
-    return response.response.text();
+      // Extract text from response
+      const result = response.response;
+      return result.text();
+    } catch (error) {
+      console.error(`${FirebaseAIService.TAG}: Error generating content`, error);
+      throw error;
+    }
   }
 
   private getChequePrompt(): string {
